@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "JackboxLibCmd": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\Knuxf\\Documents\\Test Quixort Team Importer.txt\" \"D:\\Steam\\steamapps\\common\\The Jackbox Party Pack 9\\games\\Lineup\\content\\en\\LineupTeamNamePair.jet\""
+    }
+  }
+}
