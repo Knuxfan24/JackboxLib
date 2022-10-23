@@ -1,6 +1,4 @@
-﻿using JackboxLib.JPP9.Lineup;
-
-namespace JackboxLibCmd
+﻿namespace JackboxLibCmd
 {
     internal class Program
     {
@@ -48,7 +46,7 @@ namespace JackboxLibCmd
 
                 case "[JPP9QuixortTeams]":
                     // Set up a Quixort Team.
-                    Teams quixortTeams = new();
+                    JackboxLib.JPP9.Lineup.Teams quixortTeams = new();
 
                     // If another file is provided, try to deseralise it as the original team list.
                     if (args.Length > 1)
@@ -59,6 +57,21 @@ namespace JackboxLibCmd
 
                     // Save this data.
                     quixortTeams.Seralise($"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet");
+                    break;
+
+                case "[JBB9QuixortTutorial]":
+                    // Set up a Quixort Tutorial.
+                    JackboxLib.JPP9.Lineup.Tutorial quixortTutorial = new();
+
+                    // If another file is provided, try to deseralise it as the original tutorial prompt list.
+                    if (args.Length > 1)
+                        quixortTutorial.Deseralise(args[1]);
+
+                    // Import this data.
+                    quixortTutorial.Import(text);
+
+                    // Save this data.
+                    quixortTutorial.Seralise($"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet");
                     break;
 
                 default: throw new Exception("No data found to import.");

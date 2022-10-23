@@ -71,5 +71,45 @@ namespace JackboxLib.JPP9.Lineup
         public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<TutorialFormatData>(File.ReadAllText(file));
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
+
+        public void Import(string[] text)
+        {
+            // Loop through the provided text file.
+            for (int i = 1; i < text.Length; i++)
+            {
+                // Check for the US and Explicit tags.
+                bool us = false;
+                bool _explicit = false;
+
+                if (text[i].Contains("(us)"))
+                {
+                    text[i] = text[i].Replace("(us)", "");
+                    us = true;
+                }
+                if (text[i].Contains("(explicit)"))
+                {
+                    text[i] = text[i].Replace("(explicit)", "");
+                    _explicit = true;
+                }
+
+                // Split each entry based on the | character.
+                string[] split = text[i].Split('|');
+
+                // Set up a new prompt entry for this line.
+                TutorialPrompt prompt = new()
+                {
+                    USCentric = us,
+                    ID = i - 1 + 24240,
+                    Prompt = split[0],
+                    Explicit = _explicit
+                };
+
+                // Fill in the prompt options
+                for (int p = 1; p < split.Length; p++)
+                    prompt.Items.Add(split[p]);
+
+                Data.Content.Add(prompt);
+            }
+        }
     }
 }
