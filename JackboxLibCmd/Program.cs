@@ -81,7 +81,7 @@ namespace JackboxLibCmd
             // Set up a method info object.
             MethodInfo? methodInfo;
 
-            // If another file is provided, try to deseralise it as the original team list.
+            // If another file is provided, try to deseralise it as the original data.
             if (args.Length > 1)
             {
                 methodInfo = dataType.GetMethod("Deseralise");
