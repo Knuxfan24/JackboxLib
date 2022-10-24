@@ -71,7 +71,7 @@ namespace JackboxLibCmd
         /// Process the provided file(s) with the approriate type based on the header.
         /// </summary>
         /// <param name="args">The argument list (so we can check for another file).</param>
-        /// <param name="text">The file we're proessing.</param>
+        /// <param name="text">The file we're processing.</param>
         /// <param name="dataType">The type we're processing this data as.</param>
         public static void Process(string[] args, string[] text, Type dataType)
         {
