@@ -1,4 +1,6 @@
-﻿namespace JackboxLibCmd
+﻿using System.Reflection;
+
+namespace JackboxLibCmd
 {
     internal class Program
     {
@@ -44,38 +46,55 @@
                 case "[JPP3GuesspionageQuestion]": throw new Exception("Guesspionage normal question importing not yet supported.");
                 case "[JPP3GuesspionageQuestionFinal]": throw new Exception("Guesspionage final round question importing not yet supported.");
 
-                case "[JPP9QuixortTeams]":
-                    // Set up a Quixort Team.
-                    JackboxLib.JPP9.Lineup.Teams quixortTeams = new();
+                case "[JPP9QuixortTeams]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Teams)); break;
+                case "[JBB9QuixortTutorial]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Tutorial));  break;
 
-                    // If another file is provided, try to deseralise it as the original team list.
+                // TODO: Refactor how this works so I can use the Process function.
+                // While this is OK, I'd rather not be duping this shit for things like Fibbage and Quiplash later on.
+                case "[JBB9QuixortPrompts]":
+                    // Set up a Quixort Prompt Sequence.
+                    JackboxLib.JPP9.Lineup.Sequence quixortSequence = new();
+
+                    // If another file is provided, try to deseralise it as the original prompt list.
                     if (args.Length > 1)
-                        quixortTeams.Deseralise(args[1]);
+                        quixortSequence.Deseralise(args[1]);
 
-                    // Import this data.
-                    quixortTeams.Import(text);
-
-                    // Save this data.
-                    quixortTeams.Seralise($"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet");
-                    break;
-
-                case "[JBB9QuixortTutorial]":
-                    // Set up a Quixort Tutorial.
-                    JackboxLib.JPP9.Lineup.Tutorial quixortTutorial = new();
-
-                    // If another file is provided, try to deseralise it as the original tutorial prompt list.
-                    if (args.Length > 1)
-                        quixortTutorial.Deseralise(args[1]);
-
-                    // Import this data.
-                    quixortTutorial.Import(text);
-
-                    // Save this data.
-                    quixortTutorial.Seralise($"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet");
+                    // Import this data (the saving is done as part of this function).
+                    quixortSequence.Import(text, args[0]);
                     break;
 
                 default: throw new Exception("No data found to import.");
             }
+        }
+
+        /// <summary>
+        /// Process the provided file(s) with the approriate type based on the header.
+        /// </summary>
+        /// <param name="args">The argument list (so we can check for another file).</param>
+        /// <param name="text">The file we're proessing.</param>
+        /// <param name="dataType">The type we're processing this data as.</param>
+        public static void Process(string[] args, string[] text, Type dataType)
+        {
+            // Set up the approriate data type.
+            object? data = Activator.CreateInstance(dataType);
+
+            // Set up a method info object.
+            MethodInfo? methodInfo;
+
+            // If another file is provided, try to deseralise it as the original team list.
+            if (args.Length > 1)
+            {
+                methodInfo = dataType.GetMethod("Deseralise");
+                methodInfo.Invoke(data, new object[] { args[1] });
+            }
+
+            // Import the data from this file.
+            methodInfo = dataType.GetMethod("Import");
+            methodInfo.Invoke(data, new object[] { text });
+
+            // Save this data.
+            methodInfo = dataType.GetMethod("Seralise");
+            methodInfo.Invoke(data, new object[] { $"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet" });
         }
     }
 }

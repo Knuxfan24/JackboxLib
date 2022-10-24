@@ -153,5 +153,111 @@ namespace JackboxLib.JPP9.Lineup
         public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<SequenceFormatData>(File.ReadAllText(file));
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
+    
+        public void Import(string[] text, string location)
+        {
+            // Loop through the provided text file.
+            for (int i = 1; i < text.Length; i++)
+            {
+                // Check for the US and Explicit tags.
+                bool us = false;
+                bool _explicit = false;
+
+                if (text[i].Contains("(us)"))
+                {
+                    text[i] = text[i].Replace("(us)", "");
+                    us = true;
+                }
+                if (text[i].Contains("(explicit)"))
+                {
+                    text[i] = text[i].Replace("(explicit)", "");
+                    _explicit = true;
+                }
+
+                // Split each entry based on the | character.
+                string[] split = text[i].Split('|');
+
+                // Set up the prompt.
+                SequenceEntry prompt = new()
+                {
+                    USCentric = us,
+                    Difficulty = split[4].ToLower(),
+                    ID = i - 1 + 24240,
+                    Least = split[1],
+                    Prompt = split[0],
+                    Most = split[2],
+                    Explicit = _explicit
+                };
+
+                // Add this prompt's categories.
+                foreach (string category in split[3].Split(','))
+                    prompt.Categories.Add(category);
+
+                // Add this prompt's items.
+                for (int p = 5; p < split.Length; p++)
+                {
+                    string[] promptSplit = split[p].Split(',');
+
+                    // Check if this item is a trash one or not.
+                    if (promptSplit[0] == "trash")
+                    {
+                        SequenceTrash trash = new()
+                        {
+                            Short = promptSplit[1],
+                            Long = promptSplit[2]
+                        };
+                        prompt.Trash.Add(trash);
+                    }
+                    else
+                    {
+                        SequenceItem item = new()
+                        {
+                            Value = promptSplit[0],
+                            Short = promptSplit[1],
+                            Long = promptSplit[2]
+                        };
+                        prompt.Items.Add(item);
+                    }
+                }
+
+                Data.Content.Add(prompt);
+            }
+
+            // Save this prompt file.
+            Seralise($"{Path.GetDirectoryName(location)}\\{Path.GetFileNameWithoutExtension(location)}.jet");
+
+            // Create the needed data.jet files.
+            // Loop through each prompt.
+            foreach (SequenceEntry prompt in Data.Content)
+            {
+                // Create the directory for this prompt.
+                Directory.CreateDirectory($"{Path.GetDirectoryName(location)}\\{Path.GetFileNameWithoutExtension(location)}\\{prompt.ID}");
+
+                // Set up the writers.
+                using Stream dataCreate = File.Open(Path.Combine($"{Path.GetDirectoryName(location)}\\{Path.GetFileNameWithoutExtension(location)}\\{prompt.ID}", "data.jet"), FileMode.Create);
+                using StreamWriter dataInfo = new(dataCreate);
+
+                // Hardcode the data.jet's writing.
+                // TOOO: Probably unhardcode this and expand this so a prompt audio file can be supplied too (or text to speech something for it).
+                dataInfo.WriteLine("{");
+                dataInfo.WriteLine(" \"fields\": [");
+                dataInfo.WriteLine("  {");
+                dataInfo.WriteLine("   \"t\": \"B\",");
+                dataInfo.WriteLine("   \"v\": \"false\",");
+                dataInfo.WriteLine("   \"n\": \"HasPromptAudio\"");
+                dataInfo.WriteLine("  },");
+                dataInfo.WriteLine("  {");
+                dataInfo.WriteLine("   \"t\": \"A\",");
+                dataInfo.WriteLine("   \"v\": \"prompt\",");
+                dataInfo.WriteLine("   \"n\": \"PromptAudio\",");
+                dataInfo.WriteLine($"   \"s\": \"{prompt.Prompt}\"");
+                dataInfo.WriteLine("  }");
+                dataInfo.WriteLine(" ]");
+                dataInfo.WriteLine("}");
+
+                // Close the writer.
+                dataInfo.Close();
+            }
+        }
     }
 }
