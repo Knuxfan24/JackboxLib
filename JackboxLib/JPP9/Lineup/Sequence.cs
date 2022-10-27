@@ -10,7 +10,7 @@
         /// <summary>
         /// Content header.
         /// </summary>
-        public class SequenceFormatData
+        public class FormatData
         {
             [JsonProperty(Order = 1, PropertyName = "content")]
             public List<SequenceEntry> Content { get; set; } = new();
@@ -146,9 +146,9 @@
         }
 
         // Basic setup.
-        public SequenceFormatData Data = new();
+        public FormatData Data = new();
 
-        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<SequenceFormatData>(File.ReadAllText(file));
+        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<FormatData>(File.ReadAllText(file));
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
     

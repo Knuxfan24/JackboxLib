@@ -1,6 +1,6 @@
 ﻿namespace JackboxLib.JPP9.Lineup
 {
-    public class Teams
+    public class Teams : Base
     {
         // Allow single line file loading.
         public Teams() { }
@@ -10,7 +10,7 @@
         /// <summary>
         /// Content header.
         /// </summary>
-        public class TeamFormatData
+        public class FormatData
         {
             [JsonProperty(Order = 1, PropertyName = "content")]
             public List<QuixortTeamName> Content { get; set; } = new();
@@ -64,9 +64,9 @@
         }
 
         // Basic setup.
-        public TeamFormatData Data = new();
+        public FormatData Data = new();
 
-        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<TeamFormatData>(File.ReadAllText(file));
+        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<FormatData>(File.ReadAllText(file));
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
 

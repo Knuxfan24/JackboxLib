@@ -1,6 +1,6 @@
 ﻿namespace JackboxLib.JPP9.Lineup
 {
-    public class Tutorial
+    public class Tutorial : Base
     {
         // Allow single line file loading.
         public Tutorial() { }
@@ -10,7 +10,7 @@
         /// <summary>
         /// Content header.
         /// </summary>
-        public class TutorialFormatData
+        public class FormatData
         {
             [JsonProperty(Order = 1, PropertyName = "content")]
             public List<TutorialPrompt> Content { get; set; } = new();
@@ -64,9 +64,9 @@
         }
 
         // Basic setup.
-        public TutorialFormatData Data = new();
+        public FormatData Data = new();
 
-        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<TutorialFormatData>(File.ReadAllText(file));
+        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<FormatData>(File.ReadAllText(file));
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
 
