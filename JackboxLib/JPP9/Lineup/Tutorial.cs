@@ -72,6 +72,7 @@ namespace JackboxLib.JPP9.Lineup
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
 
+        // Importing Methods.
         public void Import(string[] text)
         {
             // Loop through the provided text file.

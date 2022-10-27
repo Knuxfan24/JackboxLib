@@ -48,20 +48,7 @@ namespace JackboxLibCmd
 
                 case "[JPP9QuixortTeams]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Teams)); break;
                 case "[JBB9QuixortTutorial]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Tutorial));  break;
-
-                // TODO: Refactor how this works so I can use the Process function.
-                // While this is OK, I'd rather not be duping this shit for things like Fibbage and Quiplash later on.
-                case "[JBB9QuixortPrompts]":
-                    // Set up a Quixort Prompt Sequence.
-                    JackboxLib.JPP9.Lineup.Sequence quixortSequence = new();
-
-                    // If another file is provided, try to deseralise it as the original prompt list.
-                    if (args.Length > 1)
-                        quixortSequence.Deseralise(args[1]);
-
-                    // Import this data (the saving is done as part of this function).
-                    quixortSequence.Import(text, args[0]);
-                    break;
+                case "[JBB9QuixortPrompts]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Sequence), true);  break;
 
                 default: throw new Exception("No data found to import.");
             }
@@ -73,7 +60,8 @@ namespace JackboxLibCmd
         /// <param name="args">The argument list (so we can check for another file).</param>
         /// <param name="text">The file we're processing.</param>
         /// <param name="dataType">The type we're processing this data as.</param>
-        public static void Process(string[] args, string[] text, Type dataType)
+        /// <param name="dataJet">Whether or not this data also needs seperate data.jet files writing.</param>
+        public static void Process(string[] args, string[] text, Type dataType, bool dataJet = false)
         {
             // Set up the approriate data type.
             object? data = Activator.CreateInstance(dataType);
@@ -81,16 +69,23 @@ namespace JackboxLibCmd
             // Set up a method info object.
             MethodInfo? methodInfo;
 
+            // Import the data from this file.
+            methodInfo = dataType.GetMethod("Import");
+            methodInfo.Invoke(data, new object[] { text });
+
+            // Write the data.jet files for this format if we have to (do this here so we don't write any for the original data).
+            if (dataJet == true)
+            {
+                methodInfo = dataType.GetMethod("WriteData");
+                methodInfo.Invoke(data, new object[] { args[0] });
+            }
+
             // If another file is provided, try to deseralise it as the original data.
             if (args.Length > 1)
             {
                 methodInfo = dataType.GetMethod("Deseralise");
                 methodInfo.Invoke(data, new object[] { args[1] });
             }
-
-            // Import the data from this file.
-            methodInfo = dataType.GetMethod("Import");
-            methodInfo.Invoke(data, new object[] { text });
 
             // Save this data.
             methodInfo = dataType.GetMethod("Seralise");

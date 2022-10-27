@@ -154,7 +154,8 @@ namespace JackboxLib.JPP9.Lineup
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
     
-        public void Import(string[] text, string location)
+        // Importing Methods.
+        public void Import(string[] text)
         {
             // Loop through the provided text file.
             for (int i = 1; i < text.Length; i++)
@@ -222,11 +223,10 @@ namespace JackboxLib.JPP9.Lineup
 
                 Data.Content.Add(prompt);
             }
+        }
 
-            // Save this prompt file.
-            Seralise($"{Path.GetDirectoryName(location)}\\{Path.GetFileNameWithoutExtension(location)}.jet");
-
-            // Create the needed data.jet files.
+        public void WriteData(string location)
+        {
             // Loop through each prompt.
             foreach (SequenceEntry prompt in Data.Content)
             {
