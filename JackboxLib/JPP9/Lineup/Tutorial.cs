@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace JackboxLib.JPP9.Lineup
+﻿namespace JackboxLib.JPP9.Lineup
 {
     public class Tutorial
     {

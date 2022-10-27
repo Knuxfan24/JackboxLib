@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-
-namespace JackboxLib.JPP9.Lineup
+﻿namespace JackboxLib.JPP9.Lineup
 {
-    public class Sequence
+    public class Sequence : Base
     {
         // Allow single line file loading.
         public Sequence() { }
