@@ -24,7 +24,7 @@ namespace JackboxLibCmd
             // Split text file.
             string[] text = File.ReadAllLines(args[0]);
 
-            // Find the file type.
+            // Find the file type and process it.
             switch (text[0])
             {
                 case "[JPP9QuixortTeams]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Teams)); break;
@@ -61,14 +61,14 @@ namespace JackboxLibCmd
                 methodInfo.Invoke(data, new object[] { args[0] });
             }
 
-            // If another file is provided, try to deseralise it as the original data.
+            // If another file is provided, try to deseralise it as the original data to append to the end of our custom data.
             if (args.Length > 1)
             {
                 methodInfo = dataType.GetMethod("Deseralise");
                 methodInfo.Invoke(data, new object[] { args[1] });
             }
 
-            // Save this data.
+            // Save this data to a jet file with the same name as the imported file.
             methodInfo = dataType.GetMethod("Seralise");
             methodInfo.Invoke(data, new object[] { $"{Path.GetDirectoryName(args[0])}\\{Path.GetFileNameWithoutExtension(args[0])}.jet" });
         }
