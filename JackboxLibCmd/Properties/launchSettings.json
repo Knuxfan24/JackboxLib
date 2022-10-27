@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "JackboxLibCmd": {
-      "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\Knuxf\\Documents\\Test Quixort Prompt Importer.txt\" \"D:\\Steam\\steamapps\\common\\The Jackbox Party Pack 9\\games\\Lineup\\content\\en\\LineupLongSequence.jet\""
-    }
-  }
-}
