@@ -105,13 +105,13 @@
             public string Value { get; set; } = "";
 
             /// <summary>
-            /// The name shown for this item on the top display?
+            /// The name shown for this item on the top display.
             /// </summary>
             [JsonProperty(Order = 2, PropertyName = "longText")]
             public string Long { get; set; } = "";
 
             /// <summary>
-            /// The name shown for this item on the block?
+            /// The name shown for this item on the block.
             /// </summary>
             [JsonProperty(Order = 3, PropertyName = "shortText")]
             public string Short { get; set; } = "";
@@ -128,13 +128,13 @@
         public class SequenceTrash
         {
             /// <summary>
-            /// The name shown for this item on the top display?
+            /// The name shown for this item on the top display.
             /// </summary>
             [JsonProperty(Order = 1, PropertyName = "longText")]
             public string Long { get; set; } = "";
 
             /// <summary>
-            /// The name shown for this item on the block?
+            /// The name shown for this item on the block.
             /// </summary>
             [JsonProperty(Order = 2, PropertyName = "shortText")]
             public string Short { get; set; } = "";
