@@ -15,4 +15,14 @@
     <ProjectReference Include="..\JackboxLib\JackboxLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ExternalResources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ExternalResources\oggenc2.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

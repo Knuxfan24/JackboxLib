@@ -31,7 +31,7 @@
             /// ID number, not sure what this is used for, as it doesn't seem to be incremental?
             /// </summary>
             [JsonProperty(Order = 2, PropertyName = "id")]
-            public int ID { get; set; } = 24240;
+            public int ID { get; set; } = 24000000;
 
             /// <summary>
             /// Unknown, is never set to anything in Quixort.
@@ -66,7 +66,13 @@
         // Basic setup.
         public FormatData Data = new();
 
-        public void Deseralise(string file) => Data = JsonConvert.DeserializeObject<FormatData>(File.ReadAllText(file));
+        public void Deseralise(string file)
+        {
+            var origData = JsonConvert.DeserializeObject<FormatData>(File.ReadAllText(file));
+
+            foreach (var prompt in origData.Content)
+                Data.Content.Add(prompt);
+        }
 
         public void Seralise(string file) => File.WriteAllText(file, JsonConvert.SerializeObject(Data, Formatting.Indented));
 
@@ -98,7 +104,7 @@
                 TutorialPrompt prompt = new()
                 {
                     USCentric = us,
-                    ID = i - 1 + 24240,
+                    ID = i - 1 + 24000000,
                     Prompt = split[0],
                     Explicit = _explicit
                 };

@@ -9,14 +9,14 @@ namespace JackboxLibCmd
             // Complain if we don't have a file to parse.
             if (args.Length == 0)
             {
-                Console.WriteLine("Alan please add details.");
+                Console.WriteLine("Allan please add details.");
                 Console.ReadKey();
                 return;
             }
             // Complain if the first file isn't a plain text file.
             if (Path.GetExtension(args[0]) != ".txt")
             {
-                Console.WriteLine("Alan please add details.");
+                Console.WriteLine("Allan please add details.");
                 Console.ReadKey();
                 return;
             }
@@ -27,6 +27,8 @@ namespace JackboxLibCmd
             // Find the file type and process it.
             switch (text[0])
             {
+                case "[JBB2EarwaxPrompts]": Process(args, text, typeof(JackboxLib.JPP2.Earwax.Prompts), true); break;
+
                 case "[JPP9QuixortTeams]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Teams)); break;
                 case "[JBB9QuixortTutorial]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Tutorial));  break;
                 case "[JBB9QuixortPrompts]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Sequence), true);  break;
