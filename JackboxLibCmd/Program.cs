@@ -27,6 +27,7 @@ namespace JackboxLibCmd
             // Find the file type and process it.
             switch (text[0])
             {
+                case "[JBB2EarwaxAudio]": Process(args, text, typeof(JackboxLib.JPP2.Earwax.Audio), true); break;
                 case "[JBB2EarwaxPrompts]": Process(args, text, typeof(JackboxLib.JPP2.Earwax.Prompts), true); break;
 
                 case "[JPP9QuixortTeams]": Process(args, text, typeof(JackboxLib.JPP9.Lineup.Teams)); break;
